@@ -1,4 +1,5 @@
 env/
 *.pyc
 *.tmp
+.cache
 client_secret.json

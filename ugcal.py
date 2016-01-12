@@ -62,6 +62,21 @@ class MeetupCom:
         data = request.json()
         return data
 
+    def get_upcomig_events(self):
+        """Return upcoming events map of all groups.
+
+        Result: {url: event}
+        """
+        groups = self.get_groups()
+        result = []
+        for group in groups:
+            if 'next_event' in group:
+                event = self.get_results('{!s}/events/{!s}'.format(
+                    group['urlname'], group['next_event']['id']))
+                result.append(event)
+
+        return result
+
 
 class GoogleCalendar:
     """Google Calendar API client."""
@@ -95,51 +110,73 @@ class GoogleCalendar:
             flow.user_agent = 'Usergroups.lt Calendar updater'
             if flags:
                 credentials = oauth2client.tools.run_flow(flow, store, flags)
-            else: # Needed only for compatability with Python 2.6
+            else:  # Needed only for compatability with Python 2.6
                 credentials = oauth2client.tools.run(flow, store)
             print 'Storing credentials to ' + credential_path
         return credentials
 
-    def run(self):
+    def _get_service(self):
+        credentials = self.get_credentials()
+        http = credentials.authorize(httplib2.Http())
+        service = discovery.build('calendar', 'v3', http=http)
+        return service
+
+    def get_upcomig_events(self):
         """Shows basic usage of the Google Calendar API.
 
         Creates a Google Calendar API service object and outputs a list of the
         next 10 events on the user's calendar.
         """
-        credentials = self.get_credentials()
-        http = credentials.authorize(httplib2.Http())
-        service = discovery.build('calendar', 'v3', http=http)
+        service = self._get_service()
 
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # noqa 'Z' indicates UTC time
-        print 'Getting the upcoming 10 events'
-        eventsResult = service.events().list(
+        result = service.events().list(
             calendarId=self._config.get('calendar_id'),
-            timeMin=now, maxResults=10, singleEvents=True,
+            timeMin=now, maxResults=20, singleEvents=True,
             orderBy='startTime').execute()
-        events = eventsResult.get('items', [])
+        return result.get('items', [])
 
-        if not events:
-            print 'No upcoming events found.'
-        for event in events:
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            print start, event['summary']
+
+class UGCal(object):
+
+    def __init__(self):
+        self.meetup_api = MeetupCom()
+        self.gcal_api = GoogleCalendar()
+
+    def _build_description(self):
+        pass
+
+    def find_existing_meetups(meetups, gcal_events):
+        """Find meetups existing on Google Calendar."""
 
 
 def main():
+
     meetup_api = MeetupCom()
+    meetups = meetup_api.get_upcomig_events()
+    meetups_map = {meetup['link']: meetup for meetup in meetups}
+
     gcal_api = GoogleCalendar()
+    gcal_events = gcal_api.get_upcomig_events()
 
-    groups = meetup_api.get_groups()
-    for group in groups:
+    # STEP 1: Find events existing on calendar
+    existing_events = {}
+    events_by_name = {}
+    for meetup in meetups:
+        for event in gcal_events:
+            link = meetup['link']
+            if 'description' in event and link in event['description']:
+                existing_events[link] = event
+                break
+            #
+            # if 'summary' in event and meetup['name'] == event['summary']:
+            #     events_by_name[link] = event
 
-        print group['name'], group['link']
-        if 'next_event' in group:
-            event = meetup_api.get_results('{!s}/events/{!s}'.format(
-                group['urlname'], group['next_event']['id']))
-            print event
+    import ipdb; ipdb.set_trace()
 
-    gcal_api.run()
-
+def test_smth():
+    assert True
 
 if __name__ == "__main__":
     main()
+
