@@ -174,9 +174,6 @@ def main():
 
     import ipdb; ipdb.set_trace()
 
-def test_smth():
-    assert True
-
 if __name__ == "__main__":
     main()
 
