@@ -159,30 +159,25 @@ class UGCal(object):
 
         return existing_events
 
+    @classmethod
+    def filter_for_creation(cls, meetups, existing_events):
+        """Filter events which needs to be created."""
+        return {meetup['link']: meetup for meetup in meetups
+                if meetup['link'] not in existing_events}
+
 
 def main():
 
     meetup_api = MeetupCom()
     meetups = meetup_api.get_upcomig_events()
-    meetups_map = {meetup['link']: meetup for meetup in meetups}
 
     gcal_api = GoogleCalendar()
     gcal_events = gcal_api.get_upcomig_events()
 
     # STEP 1: Find events existing on calendar
-    existing_events = {}
-    events_by_name = {}
-    for meetup in meetups:
-        for event in gcal_events:
-            link = meetup['link']
-            if 'description' in event and link in event['description']:
-                existing_events[link] = event
-                break
-            #
-            # if 'summary' in event and meetup['name'] == event['summary']:
-            #     events_by_name[link] = event
+    existing_events = UGCal.find_existing_events(meetups, gcal_events)
+    to_create = UGCal.filter_for_creation(meetups, existing_events)
 
-    import ipdb; ipdb.set_trace()
 
 if __name__ == "__main__":
     main()
