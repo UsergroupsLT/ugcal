@@ -146,8 +146,18 @@ class UGCal(object):
     def _build_description(self):
         pass
 
-    def find_existing_meetups(meetups, gcal_events):
+    @classmethod
+    def find_existing_events(cls, meetups, gcal_events):
         """Find meetups existing on Google Calendar."""
+        existing_events = {}
+        for meetup in meetups:
+            for event in gcal_events:
+                link = meetup['link']
+                if 'description' in event and link in event['description']:
+                    existing_events[link] = event
+                    break
+
+        return existing_events
 
 
 def main():
@@ -176,4 +186,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
