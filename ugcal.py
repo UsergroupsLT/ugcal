@@ -3,11 +3,12 @@ from __future__ import unicode_literals
 import datetime
 import httplib2
 import json
+import oauth2client
 import os
 import requests
 
-import oauth2client
 from apiclient import discovery
+from html2text import html2text
 
 GROUPS = [
     # 'Technarium',
@@ -143,8 +144,15 @@ class UGCal(object):
         self.meetup_api = MeetupCom()
         self.gcal_api = GoogleCalendar()
 
-    def _build_description(self):
-        pass
+    @classmethod
+    def build_description(cls, meetup):
+        """Build event description from meetup."""
+        parts = [
+            'RSVP: {}'.format(meetup['link']),
+            html2text(meetup['description']),
+        ]
+
+        return "\n\n".join(parts)
 
     @classmethod
     def find_existing_events(cls, meetups, gcal_events):
