@@ -165,6 +165,11 @@ class UGCal(object):
                     existing_events[link] = event
                     break
 
+                if meetup['name'] == event['summary']:
+                    existing_events[link] = event
+                    break
+
+
         return existing_events
 
     @classmethod

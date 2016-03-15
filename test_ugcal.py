@@ -46,16 +46,20 @@ def php_meetup():
 
 def test_existing_events_by_links():
     php_meetup = {
+        'name': 'Vilnius PHP 123',
         'link': 'http://www.meetup.com/php_meetup/events/123456/'
     }
     js_meetup = {
+        'name': 'JS Meetup',
         'link': 'http://www.meetup.com/js_meetup/events/654321/'
     }
 
     php_event = {
+        'summary': 'Some event',
         'description': 'lorem ipsum http://www.meetup.com/php_meetup/events/123456/ somehting else.'  # noqa
     }
     ruby_event = {
+        'summary': 'Ruby',
         'description': ''
     }
 
@@ -65,6 +69,29 @@ def test_existing_events_by_links():
     result = UGCal.find_existing_events(meetups, gcal_events)
     assert {
         'http://www.meetup.com/php_meetup/events/123456/': php_event
+    } == result
+
+
+def test_existing_events_by_names():
+    php_meetup = {
+        'link': 'http://www.meetup.com/php_meetup/events/123456/',
+        'name': 'Vilnius PHP 123'
+    }
+    js_meetup = {
+        'link': 'http://www.meetup.com/js_meetup/events/654321/',
+        'name': 'JS Meets Meteor!'
+    }
+
+    existing_php_event = {'summary': 'Vilnius PHP 123'}
+    other_php_event = {'summary': 'Vilnius PHP Woooo'}
+    ruby_event = {'summary': 'Ruby 4 eva'}
+
+    meetups = [php_meetup, js_meetup]
+    gcal_events = [other_php_event, existing_php_event, ruby_event]
+
+    result = UGCal.find_existing_events(meetups, gcal_events)
+    assert {
+        'http://www.meetup.com/php_meetup/events/123456/': existing_php_event
     } == result
 
 
@@ -88,8 +115,6 @@ def test_filter_events_to_create():
 
 
 def test_build_description(php_meetup):
-    description = UGCal.build_description(php_meetup)
-
     expect = """RSVP: http://www.meetup.com/vilniusphp/events/228864161/
 
 Speakers: TBA
