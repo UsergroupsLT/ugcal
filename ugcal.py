@@ -11,15 +11,15 @@ from apiclient import discovery
 from html2text import html2text
 
 GROUPS = [
-    # 'Technarium',
-    # 'Vilnius-DevOps-Meetup',
-    # 'Vilnius-Hadoop-Meetup',
-    # 'Vilnius-js',
-    # 'functional-vilnius',
-    # 'vilnius-hack-and-tell',
+    'Technarium',
+    'Vilnius-DevOps-Meetup',
+    'Vilnius-Hadoop-Meetup',
+    'Vilnius-js',
+    'functional-vilnius',
+    'vilnius-hack-and-tell',
     'vilniusphp',
-    # 'vilniuspy',
-    # 'vilniusrb',
+    'vilniuspy',
+    'vilniusrb',
     ]
 
 
@@ -82,7 +82,7 @@ class MeetupCom:
 class GoogleCalendar:
     """Google Calendar API client."""
 
-    SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+    SCOPES = 'https://www.googleapis.com/auth/calendar'
 
     def __init__(self):
         self._config = Config()
