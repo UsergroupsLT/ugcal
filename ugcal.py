@@ -122,20 +122,28 @@ class GoogleCalendar:
         service = discovery.build('calendar', 'v3', http=http)
         return service
 
-    def get_upcomig_events(self):
-        """Shows basic usage of the Google Calendar API.
+    def get_upcomig_events(self, limit=20):
+        """Get upcoming calendar events.
 
         Creates a Google Calendar API service object and outputs a list of the
-        next 10 events on the user's calendar.
+        next events on the user's calendar.
         """
         service = self._get_service()
 
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # noqa 'Z' indicates UTC time
         result = service.events().list(
             calendarId=self._config.get('calendar_id'),
-            timeMin=now, maxResults=20, singleEvents=True,
+            timeMin=now, maxResults=limit, singleEvents=True,
             orderBy='startTime').execute()
         return result.get('items', [])
+
+    def insert_event(self, event):
+        """Insert new event to calendar."""
+        service = self._get_service()
+        service.events().insert(
+            calendarId=self._config.get('calendar_id'),
+            body=event
+        ).execute()
 
 
 class UGCal(object):
@@ -153,6 +161,7 @@ class UGCal(object):
         ]
 
         return "\n\n".join(parts)
+
 
     @classmethod
     def find_existing_events(cls, meetups, gcal_events):
