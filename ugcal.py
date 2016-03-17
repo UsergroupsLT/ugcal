@@ -162,6 +162,49 @@ class UGCal(object):
 
         return "\n\n".join(parts)
 
+    @classmethod
+    def build_location(cls):
+        """Build event location from meetup venue."""
+        raise NotImplementedError
+
+    @classmethod
+    def build_start_date(cls, meetup):
+        """Build event start date from meetup object."""
+        start_date = (datetime.datetime
+                      .utcfromtimestamp(meetup['time']/1000)
+                      .strftime('%Y-%m-%dT%H:%M:%S'))
+
+        offset = ('{!s}{!s}'.format(
+                  ('-' if meetup['utc_offset'] < 0 else '+'),
+                  datetime.datetime
+                  .utcfromtimestamp(abs(meetup['utc_offset'])/1000)
+                  .strftime('%H:%M')))
+
+        return '{}{}'.format(start_date, offset)
+
+    @classmethod
+    def build_event(cls, meetup):
+        """Build event body from meetup.
+
+        Build Google Calendar event body from Meetup.com meetup. Generate all
+        required fields.
+        """
+        start_date = cls.build_start_date(meetup)
+        event = {
+          'summary': meetup['name'],
+          # 'location': '800 Howard St., San Francisco, CA 94103',
+          'description': cls.build_description(meetup),
+          'start': {
+            'dateTime': start_date,
+            'timeZone': 'Europe/Vilnius',
+          },
+          'end': {
+            'dateTime': '2015-05-28T17:00:00-07:00',
+            'timeZone': 'Europe/Vilnius',
+          },
+        }
+
+        return event
 
     @classmethod
     def find_existing_events(cls, meetups, gcal_events):
@@ -186,12 +229,15 @@ class UGCal(object):
         """Filter events which needs to be created."""
         return {meetup['link']: meetup for meetup in meetups
                 if meetup['link'] not in existing_events}
+        
 
 
 def main():
 
     meetup_api = MeetupCom()
     meetups = meetup_api.get_upcomig_events()
+    import ipdb
+    ipdb.set_trace()
 
     gcal_api = GoogleCalendar()
     gcal_events = gcal_api.get_upcomig_events()
