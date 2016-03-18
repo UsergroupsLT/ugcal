@@ -127,18 +127,28 @@ register you as a speaker!
     assert expect == result
 
 
-def test_build_event_start_date(php_meetup):
-    start = UGCal.build_start_date(php_meetup)
+def test_build_date(php_meetup):
+    start = UGCal.build_date(php_meetup)
     assert "2016-04-07T15:30:00+03:00" == start
 
 
-def test_build_event_start_date_with_no_utc_offset(php_meetup):
+def test_build_date_with_no_utc_offset(php_meetup):
     php_meetup['utc_offset'] = 0
-    start = UGCal.build_start_date(php_meetup)
+    start = UGCal.build_date(php_meetup)
     assert "2016-04-07T15:30:00+00:00" == start
 
 
-def test_build_event_start_date_with_negative_utc_offset(php_meetup):
+def test_build_date_with_negative_utc_offset(php_meetup):
     php_meetup['utc_offset'] = -7200000
-    start = UGCal.build_start_date(php_meetup)
+    start = UGCal.build_date(php_meetup)
     assert "2016-04-07T15:30:00-02:00" == start
+
+
+def build_date_with_positive_hours_offset():
+    start = UGCal.build_date(php_meetup, 2)
+    assert "2016-04-07T17:30:00+03:00" == start
+
+
+def build_date_with_negative_hours_offset():
+    start = UGCal.build_date(php_meetup, -2)
+    assert "2016-04-07T13:30:00+03:00" == start

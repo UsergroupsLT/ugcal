@@ -148,6 +148,8 @@ class GoogleCalendar:
 
 class UGCal(object):
 
+    EVENT_DURATION_HOURS = 2
+
     def __init__(self):
         self.meetup_api = MeetupCom()
         self.gcal_api = GoogleCalendar()
@@ -168,19 +170,24 @@ class UGCal(object):
         raise NotImplementedError
 
     @classmethod
-    def build_start_date(cls, meetup):
-        """Build event start date from meetup object."""
-        start_date = (datetime.datetime
-                      .utcfromtimestamp(meetup['time']/1000)
-                      .strftime('%Y-%m-%dT%H:%M:%S'))
+    def build_date(cls, meetup, hours_offset=0):
+        """Build date from start date on meetup object.
+        
+        If hours_offset is provided, it will be added to the date. This could
+        be useful calculate event end time.
+        """
+        date = datetime.datetime.utcfromtimestamp(meetup['time']/1000)
+        if hours_offset:
+            date += datetime.timedelta(hours=hours_offset)
 
-        offset = ('{!s}{!s}'.format(
-                  ('-' if meetup['utc_offset'] < 0 else '+'),
-                  datetime.datetime
-                  .utcfromtimestamp(abs(meetup['utc_offset'])/1000)
-                  .strftime('%H:%M')))
+        date_string = date.strftime('%Y-%m-%dT%H:%M:%S')
+        utc_offset = ('{!s}{!s}'.format(
+                      ('-' if meetup['utc_offset'] < 0 else '+'),
+                      datetime.datetime
+                      .utcfromtimestamp(abs(meetup['utc_offset'])/1000)
+                      .strftime('%H:%M')))
 
-        return '{}{}'.format(start_date, offset)
+        return '{}{}'.format(date_string, utc_offset)
 
     @classmethod
     def build_event(cls, meetup):
@@ -189,17 +196,16 @@ class UGCal(object):
         Build Google Calendar event body from Meetup.com meetup. Generate all
         required fields.
         """
-        start_date = cls.build_start_date(meetup)
         event = {
           'summary': meetup['name'],
           # 'location': '800 Howard St., San Francisco, CA 94103',
           'description': cls.build_description(meetup),
           'start': {
-            'dateTime': start_date,
+            'dateTime': cls.build_date(meetup),
             'timeZone': 'Europe/Vilnius',
           },
           'end': {
-            'dateTime': '2015-05-28T17:00:00-07:00',
+            'dateTime': cls.build_date(meetup, cls.EVENT_DURATION_HOURS),
             'timeZone': 'Europe/Vilnius',
           },
         }
