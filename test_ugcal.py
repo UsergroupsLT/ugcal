@@ -7,7 +7,7 @@ from ugcal import UGCal
 @pytest.fixture
 def php_meetup():
     return {
-        u'status': u'upcoming', 
+        u'status': u'upcoming',
         u'updated': 1457875805000,
         u'group': {
             u'who': u'PHPers',
@@ -16,7 +16,7 @@ def php_meetup():
             u'created': 1416565027000,
             u'lon': 25.270000457763672,
             u'lat': 54.70000076293945,
-            u'urlname': u'vilniusphp', 
+            u'urlname': u'vilniusphp',
             u'id': 18204759
         },
         u'name': u'VilniusPHP 0x29',

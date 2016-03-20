@@ -172,7 +172,7 @@ class UGCal(object):
     @classmethod
     def build_date(cls, meetup, hours_offset=0):
         """Build date from start date on meetup object.
-        
+
         If hours_offset is provided, it will be added to the date. This could
         be useful calculate event end time.
         """
@@ -227,7 +227,6 @@ class UGCal(object):
                     existing_events[link] = event
                     break
 
-
         return existing_events
 
     @classmethod
@@ -235,7 +234,6 @@ class UGCal(object):
         """Filter events which needs to be created."""
         return {meetup['link']: meetup for meetup in meetups
                 if meetup['link'] not in existing_events}
-        
 
 
 def main():
@@ -250,7 +248,7 @@ def main():
 
     # STEP 1: Find events existing on calendar
     existing_events = UGCal.find_existing_events(meetups, gcal_events)
-    to_create = UGCal.filter_for_creation(meetups, existing_events)
+    to_create = UGCal.filter_for_creation(meetups, existing_events)  # noqa
 
 
 if __name__ == "__main__":
