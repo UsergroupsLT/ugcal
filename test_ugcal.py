@@ -144,11 +144,11 @@ def test_build_date_with_negative_utc_offset(php_meetup):
     assert "2016-04-07T15:30:00-02:00" == start
 
 
-def build_date_with_positive_hours_offset():
+def test_build_date_with_positive_hours_offset(php_meetup):
     start = UGCal.build_date(php_meetup, 2)
     assert "2016-04-07T17:30:00+03:00" == start
 
 
-def build_date_with_negative_hours_offset():
+def test_build_date_with_negative_hours_offset(php_meetup):
     start = UGCal.build_date(php_meetup, -2)
     assert "2016-04-07T13:30:00+03:00" == start
