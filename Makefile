@@ -8,9 +8,14 @@ run:
 	$(python) ugcal.py
 
 .PHONY: test
-test:
+test: clean
 	$(pytest)
 
 .PHONY: lint
 lint:
 	$(flake8) .
+
+.PHONY: clean
+clean:
+	@find  -name "*.pyc" -delete
+
