@@ -240,8 +240,6 @@ def main():
 
     meetup_api = MeetupCom()
     meetups = meetup_api.get_upcomig_events()
-    import ipdb
-    ipdb.set_trace()
 
     gcal_api = GoogleCalendar()
     gcal_events = gcal_api.get_upcomig_events()
@@ -249,6 +247,10 @@ def main():
     # STEP 1: Find events existing on calendar
     existing_events = UGCal.find_existing_events(meetups, gcal_events)
     to_create = UGCal.filter_for_creation(meetups, existing_events)  # noqa
+    if to_create:
+        for url in to_create:
+            event = UGCal.build_event(to_create.get(url))
+            gcal_api.insert_event(event)
 
 
 if __name__ == "__main__":
