@@ -36,12 +36,12 @@ class Config:
     CLIENT_SECRET_FILE = 'client_secret.json'
 
     def __init__(self):
-        config_file = file(self.CLIENT_SECRET_FILE, 'r')
+        config_file = file('config.json', 'r')
         self._config = json.loads(config_file.read())
 
     def get(self, key):
         """Retrieve custom value from config."""
-        return self._config['other'][key]
+        return self._config[key]
 
     def get_secret_file(self):
         return self.CLIENT_SECRET_FILE

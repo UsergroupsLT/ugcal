@@ -3,3 +3,4 @@ env/
 *.tmp
 .cache
 client_secret.json
+config.json
