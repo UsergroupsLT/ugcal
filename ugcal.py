@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import datetime
 import httplib2
 import json
+import logging
 import oauth2client
 import os
 import requests
@@ -29,6 +30,10 @@ try:
         parents=[oauth2client.tools.argparser]).parse_args()
 except ImportError:
     flags = None
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
 
 
 class Config:
@@ -248,8 +253,11 @@ def main():
     existing_events = UGCal.find_existing_events(meetups, gcal_events)
     to_create = UGCal.filter_for_creation(meetups, existing_events)  # noqa
     if to_create:
+        logger.info("Found events to create: %d", len(to_create))
         for url in to_create:
             event = UGCal.build_event(to_create.get(url))
+            logger.info("Creating event %s %s",
+                        event['summary'], event['start']['dateTime'])
             gcal_api.insert_event(event)
 
 
