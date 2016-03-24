@@ -129,7 +129,7 @@ register you as a speaker!
 
 def test_build_date(php_meetup):
     start = UGCal.build_date(php_meetup)
-    assert "2016-04-07T15:30:00+03:00" == start
+    assert "2016-04-07T18:30:00+03:00" == start
 
 
 def test_build_date_with_no_utc_offset(php_meetup):
@@ -141,17 +141,17 @@ def test_build_date_with_no_utc_offset(php_meetup):
 def test_build_date_with_negative_utc_offset(php_meetup):
     php_meetup['utc_offset'] = -7200000
     start = UGCal.build_date(php_meetup)
-    assert "2016-04-07T15:30:00-02:00" == start
+    assert "2016-04-07T13:30:00-02:00" == start
 
 
 def test_build_date_with_positive_hours_offset(php_meetup):
     start = UGCal.build_date(php_meetup, 2)
-    assert "2016-04-07T17:30:00+03:00" == start
+    assert "2016-04-07T20:30:00+03:00" == start
 
 
 def test_build_date_with_negative_hours_offset(php_meetup):
     start = UGCal.build_date(php_meetup, -2)
-    assert "2016-04-07T13:30:00+03:00" == start
+    assert "2016-04-07T16:30:00+03:00" == start
 
 
 def test_build_event(php_meetup):
@@ -170,11 +170,11 @@ register you as a speaker!
         'summary': 'VilniusPHP 0x29',
         'description': expected_description,
         'start': {
-            'dateTime': '2016-04-07T15:30:00+03:00',
+            'dateTime': '2016-04-07T18:30:00+03:00',
             'timeZone': 'Europe/Vilnius',
         },
         'end': {
-            'dateTime': '2016-04-07T17:30:00+03:00',
+            'dateTime': '2016-04-07T20:30:00+03:00',
             'timeZone': 'Europe/Vilnius',
         },
     } == event

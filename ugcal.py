@@ -182,6 +182,7 @@ class UGCal(object):
         be useful calculate event end time.
         """
         date = datetime.datetime.utcfromtimestamp(meetup['time']/1000)
+        date += datetime.timedelta(minutes=meetup['utc_offset']/1000/60)
         if hours_offset:
             date += datetime.timedelta(hours=hours_offset)
 
@@ -212,7 +213,7 @@ class UGCal(object):
           'end': {
             'dateTime': cls.build_date(meetup, cls.EVENT_DURATION_HOURS),
             'timeZone': 'Europe/Vilnius',
-          },
+          }
         }
 
         return event
@@ -257,7 +258,8 @@ def main():
         for url in to_create:
             event = UGCal.build_event(to_create.get(url))
             logger.info("Creating event %s %s",
-                        event['summary'], event['start']['dateTime'])
+                        event['summary'],
+                        event['start']['dateTime'])
             gcal_api.insert_event(event)
 
 

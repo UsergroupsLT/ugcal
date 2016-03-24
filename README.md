@@ -12,3 +12,4 @@ Find by yourself.
 - Add logs/verbose output
 - Update existing events
 - Change structure to be a real python module.
+- Remove events if they are not listed on meetup.com anymore
