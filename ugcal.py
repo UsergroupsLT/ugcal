@@ -154,10 +154,8 @@ class GoogleCalendar:
 class UGCal(object):
 
     EVENT_DURATION_HOURS = 2
-
-    def __init__(self):
-        self.meetup_api = MeetupCom()
-        self.gcal_api = GoogleCalendar()
+    meetup_api = MeetupCom()
+    gcal_api = GoogleCalendar()
 
     @classmethod
     def build_description(cls, meetup):
@@ -241,26 +239,28 @@ class UGCal(object):
         return {meetup['link']: meetup for meetup in meetups
                 if meetup['link'] not in existing_events}
 
+    @classmethod
+    def syncronize(cls):
+        """Syncronize google calendar with meetup.com"""
+        meetups = cls.meetup_api.get_upcomig_events()
+        gcal_events = cls.gcal_api.get_upcomig_events()
+
+        # STEP 1: Find events existing on calendar
+        existing_events = cls.find_existing_events(meetups, gcal_events)
+        to_create = cls.filter_for_creation(meetups, existing_events)  # noqa
+        if to_create:
+            logger.info("Found events to create: %d", len(to_create))
+            for url in to_create:
+                event = UGCal.build_event(to_create.get(url))
+                logger.info("Creating event %s %s",
+                            event['summary'],
+                            event['start']['dateTime'])
+                cls.gcal_api.insert_event(event)
+        
+
 
 def main():
-
-    meetup_api = MeetupCom()
-    meetups = meetup_api.get_upcomig_events()
-
-    gcal_api = GoogleCalendar()
-    gcal_events = gcal_api.get_upcomig_events()
-
-    # STEP 1: Find events existing on calendar
-    existing_events = UGCal.find_existing_events(meetups, gcal_events)
-    to_create = UGCal.filter_for_creation(meetups, existing_events)  # noqa
-    if to_create:
-        logger.info("Found events to create: %d", len(to_create))
-        for url in to_create:
-            event = UGCal.build_event(to_create.get(url))
-            logger.info("Creating event %s %s",
-                        event['summary'],
-                        event['start']['dateTime'])
-            gcal_api.insert_event(event)
+    UGCal.syncronize()
 
 
 if __name__ == "__main__":
