@@ -95,6 +95,26 @@ def test_existing_events_by_names():
     } == result
 
 
+def test_existing_events_by_name_begining():
+    php_meetup = {
+        'link': 'http://www.meetup.com/php_meetup/events/123456/',
+        'time': 1460043000000,
+        'name': 'Vilnius PHP 123'
+    }
+
+    existing_php_event = {
+        'summary': 'Vilnius PHP',
+        'time': 1460043000000,
+    }
+
+    meetups = [php_meetup]
+    gcal_events = [existing_php_event]
+    result = UGCal.find_existing_events(meetups, gcal_events)
+    assert {
+        'http://www.meetup.com/php_meetup/events/123456/': existing_php_event
+    } == result
+
+
 def test_filter_events_to_create():
     old_php_meetup = {
         'link': 'http://www.meetup.com/php_meetup/events/123456/'

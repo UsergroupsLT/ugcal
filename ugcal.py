@@ -228,6 +228,14 @@ class UGCal(object):
                     break
 
                 if meetup['name'] == event['summary']:
+                    # TODO: Check if date is the same
+                    existing_events[link] = event
+                    break
+
+                if (meetup['name'] == event['summary'][:len(meetup['name'])] or
+                        event['summary'] ==
+                        meetup['name'][:len(event['summary'])]):
+                    # TODO: Check if date is the same
                     existing_events[link] = event
                     break
 
