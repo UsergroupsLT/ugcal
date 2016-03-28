@@ -154,8 +154,10 @@ class GoogleCalendar:
 class UGCal(object):
 
     EVENT_DURATION_HOURS = 2
-    meetup_api = MeetupCom()
-    gcal_api = GoogleCalendar()
+
+    def __init__(self):
+        self.meetup_api = MeetupCom()
+        self.gcal_api = GoogleCalendar()
 
     @classmethod
     def build_description(cls, meetup):
@@ -247,11 +249,10 @@ class UGCal(object):
         return {meetup['link']: meetup for meetup in meetups
                 if meetup['link'] not in existing_events}
 
-    @classmethod
-    def syncronize(cls):
+    def syncronize(self):
         """Syncronize google calendar with meetup.com"""
-        meetups = cls.meetup_api.get_upcomig_events()
-        gcal_events = cls.gcal_api.get_upcomig_events()
+        meetups = self.meetup_api.get_upcomig_events()
+        gcal_events = self.gcal_api.get_upcomig_events()
 
         # STEP 1: Find events existing on calendar
         existing_events = cls.find_existing_events(meetups, gcal_events)
@@ -263,12 +264,13 @@ class UGCal(object):
                 logger.info("Creating event %s %s",
                             event['summary'],
                             event['start']['dateTime'])
-                cls.gcal_api.insert_event(event)
+                self.gcal_api.insert_event(event)
         
 
 
 def main():
-    UGCal.syncronize()
+    ugcal = UGCal()
+    ugcal.syncronize()
 
 
 if __name__ == "__main__":
