@@ -255,7 +255,7 @@ class UGCal(object):
         gcal_events = self.gcal_api.get_upcomig_events()
 
         # STEP 1: Find events existing on calendar
-        existing_events = cls.find_existing_events(meetups, gcal_events)
+        existing_events = self.find_existing_events(meetups, gcal_events)
         to_create = cls.filter_for_creation(meetups, existing_events)  # noqa
         if to_create:
             logger.info("Found events to create: %d", len(to_create))
@@ -265,7 +265,6 @@ class UGCal(object):
                             event['summary'],
                             event['start']['dateTime'])
                 self.gcal_api.insert_event(event)
-        
 
 
 def main():
