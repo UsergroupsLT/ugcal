@@ -9,6 +9,7 @@ import os
 import requests
 
 from apiclient import discovery
+from dateutil import parser
 from html2text import html2text
 
 GROUPS = [
@@ -221,25 +222,41 @@ class UGCal(object):
     @classmethod
     def find_existing_events(cls, meetups, gcal_events):
         """Find meetups existing on Google Calendar."""
+
+        known_event_dates = {}
+
+        def get_event_start_date(event):
+            if event['id'] in known_event_dates:
+                return known_event_dates[event['id']]
+
+            date_string = (event['start']['dateTime'] if 'dateTime' in
+                           event['start'] else event['start']['date'])
+
+            date = parser.parse(date_string).date()
+            known_event_dates[event['id']] = date
+            return date
+
         existing_events = {}
         for meetup in meetups:
+            meetup_start = parser.parse(cls.build_date(meetup)).date()
             for event in gcal_events:
                 link = meetup['link']
                 if 'description' in event and link in event['description']:
                     existing_events[link] = event
                     break
 
-                if meetup['name'] == event['summary']:
-                    # TODO: Check if date is the same
-                    existing_events[link] = event
-                    break
+                event_start = get_event_start_date(event)
+                if meetup_start == event_start:
+                    if meetup['name'] == event['summary']:
+                        existing_events[link] = event
+                        break
 
-                if (meetup['name'] == event['summary'][:len(meetup['name'])] or
-                        event['summary'] ==
-                        meetup['name'][:len(event['summary'])]):
-                    # TODO: Check if date is the same
-                    existing_events[link] = event
-                    break
+                    if (meetup['name'] ==
+                            event['summary'][:len(meetup['name'])] or
+                            event['summary'] ==
+                            meetup['name'][:len(event['summary'])]):
+                        existing_events[link] = event
+                        break
 
         return existing_events
 
@@ -256,7 +273,7 @@ class UGCal(object):
 
         # STEP 1: Find events existing on calendar
         existing_events = self.find_existing_events(meetups, gcal_events)
-        to_create = cls.filter_for_creation(meetups, existing_events)  # noqa
+        to_create = self.filter_for_creation(meetups, existing_events)  # noqa
         if to_create:
             logger.info("Found events to create: %d", len(to_create))
             for url in to_create:
