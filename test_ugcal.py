@@ -134,43 +134,32 @@ def test_existing_events_by_links(php_meetup, js_meetup):
     } == result
 
 
-# def test_existing_events_by_names(php_meetup, js_meetup):
-#     php_meetup['link'] = 'http://www.meetup.com/php_meetup/events/123456/'
-#     php_meetup['name'] = 'Vilnius PHP 123'
-#
-#     js_meetup['link'] = 'http://www.meetup.com/js_meetup/events/654321/'
-#     js_meetup['name'] = 'JS Meets Meteor!'
-#
-#     existing_php_event = {
-#         'id': 'qwerty',
-#         'summary': 'Vilnius PHP 123',
-#         'start': {
-#             'dateTime': '2016-04-07T18:30:00+03:00'
-#         }
-#     }
-#     other_php_event = {
-#         'id': 'qwerty',
-#         'summary': 'Vilnius PHP Woo',
-#         'start': {
-#             'dateTime': '2016-03-07T18:30:00+03:00'
-#         }
-#     }
-#     ruby_event = {
-#         'id': 'azerty',
-#         'summary': 'Ruby',
-#         'start': {
-#             'dateTime': '2016-03-31 22:00'
-#         },
-#         'description': ''
-#     }
-#
-#     meetups = [php_meetup, js_meetup]
-#     gcal_events = [other_php_event, existing_php_event, ruby_event]
-#
-#     result = UGCal.find_existing_events(meetups, gcal_events)
-#     assert {
-#         'http://www.meetup.com/php_meetup/events/123456/': existing_php_event
-#     } == result
+def test_existing_events_by_names(php_meetup, js_meetup, php_event):
+    php_meetup['name'] = 'Vilnius PHP 123'
+
+    other_php_event = {
+        'id': 'qwerty',
+        'summary': 'Moo Vilnius PHP Woo',
+        'start': {
+            'dateTime': '2016-04-07T19:00:00+03:00'
+        }
+    }
+    ruby_event = {
+        'id': 'azerty',
+        'summary': 'Ruby',
+        'start': {
+            'dateTime': '2016-03-31 22:00'
+        },
+        'description': ''
+    }
+
+    meetups = [php_meetup, js_meetup]
+    gcal_events = [other_php_event, php_event, ruby_event]
+
+    result = UGCal.find_existing_events(meetups, gcal_events)
+    assert 1 == len(result)
+    assert php_meetup['link'] in result
+    assert php_event == result[php_meetup['link']]
 
 
 def test_existing_events_by_name_begining(php_meetup, php_event):
