@@ -287,7 +287,3 @@ class UGCal(object):
 def main():
     ugcal = UGCal()
     ugcal.syncronize()
-
-
-if __name__ == "__main__":
-    main()
