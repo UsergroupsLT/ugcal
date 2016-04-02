@@ -15,6 +15,7 @@ setup(name='ugcal',
       author_email='pavvka@gmail.com',
       license='MIT',
       packages=['ugcal'],
+      include_packages_data=True,
       entry_points={
           'console_scripts': ['ugcal-cli=ugcal.ugcal:main']
       },
