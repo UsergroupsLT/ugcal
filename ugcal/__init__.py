@@ -1,1 +1,1 @@
-from .ugcal import UGCal
+from .ugcal import UGCal  # noqa
