@@ -19,4 +19,11 @@ setup(name='ugcal',
       entry_points={
           'console_scripts': ['ugcal-cli=ugcal.ugcal:main']
       },
+      install_requires=[
+          'google-api-python-client',
+          'html2text',
+          'httplib2',
+          'python-dateutil'
+          'requests',
+      ],
       zip_safe=False)
