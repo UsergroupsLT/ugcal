@@ -60,27 +60,32 @@ class MeetupCom:
 
     def get_groups(self):
         """Retrieve list of groups."""
-        return [self.get_results(name) for name in GROUPS]
+        return [self._get_results(name) for name in GROUPS]
 
-    def get_results(self, endpoint, params={}):
+    def _get_results(self, endpoint, params={}):
         params['key'] = self._config.get('meetup_api_key')
         url = "http://api.meetup.com/" + endpoint
         request = requests.get(url, params=params)
+        logger.info("MeetupCom REQUEST: %s", url)
         data = request.json()
         return data
 
-    def get_upcomig_events(self):
-        """Return upcoming events map of all groups.
+    def get_events(self, group, limit=10):
+        """Return events list of Meetup group."""
+        return self._get_results(
+            '{!s}/events'.format(group['urlname']), {'page': limit})
+
+    def get_upcomig_meetups(self):
+        """Return upcoming meetups map of all groups.
 
         Result: {url: event}
         """
         groups = self.get_groups()
         result = []
         for group in groups:
-            if 'next_event' in group:
-                event = self.get_results('{!s}/events/{!s}'.format(
-                    group['urlname'], group['next_event']['id']))
-                result.append(event)
+            group_events = self.get_events(group, 1)
+            if group_events:
+                result += group_events
 
         return result
 
@@ -268,7 +273,7 @@ class UGCal(object):
 
     def syncronize(self):
         """Syncronize google calendar with meetup.com"""
-        meetups = self.meetup_api.get_upcomig_events()
+        meetups = self.meetup_api.get_upcomig_meetups()
         gcal_events = self.gcal_api.get_upcomig_events()
 
         # STEP 1: Find events existing on calendar
@@ -287,3 +292,6 @@ class UGCal(object):
 def main():
     ugcal = UGCal()
     ugcal.syncronize()
+
+if __name__ == "__main__":
+    main()
