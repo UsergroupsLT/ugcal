@@ -7,6 +7,7 @@ import logging
 import oauth2client
 import os
 import requests
+import time
 
 from apiclient import discovery
 from dateutil import parser
@@ -54,6 +55,9 @@ class Config:
 
 
 class MeetupCom:
+
+    DAYS_FORECAST = 30
+
     """Meetup.com API client."""
     def __init__(self):
         self._config = Config()
@@ -76,18 +80,17 @@ class MeetupCom:
             '{!s}/events'.format(group['urlname']), {'page': limit})
 
     def get_upcomig_meetups(self):
-        """Return upcoming meetups map of all groups.
-
-        Result: {url: event}
-        """
+        """Return upcoming meetups map of all groups."""
         groups = self.get_groups()
         result = []
         for group in groups:
-            group_events = self.get_events(group, 1)
-            if group_events:
-                result += group_events
+            result += self.get_events(group)
 
-        return result
+        max_date = (datetime.datetime.utcnow() +
+                    datetime.timedelta(days=self.DAYS_FORECAST))
+        max_time = int(time.mktime(max_date.timetuple())) * 1000
+
+        return filter(lambda meetup: meetup['time'] <= max_time, result)
 
 
 class GoogleCalendar:
