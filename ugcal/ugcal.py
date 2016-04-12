@@ -116,10 +116,7 @@ class GoogleCalendar:
             flow = oauth2client.client.flow_from_clientsecrets(
                 self._config.get_secret_file(), self.SCOPES)
             flow.user_agent = 'Usergroups.lt Calendar updater'
-            if flags:
-                credentials = oauth2client.tools.run_flow(flow, store, flags)
-            else:  # Needed only for compatability with Python 2.6
-                credentials = oauth2client.tools.run(flow, store)
+            credentials = oauth2client.tools.run(flow, store)
             print 'Storing credentials to ' + credential_path
         return credentials
 
@@ -282,7 +279,7 @@ class UGCal(object):
 
         # STEP 1: Find events existing on calendar
         existing_events = self.find_existing_events(meetups, gcal_events)
-        to_create = self.filter_for_creation(meetups, existing_events)  # noqa
+        to_create = self.filter_for_creation(meetups, existing_events)
         if to_create:
             logger.info("Found events to create: %d", len(to_create))
             for url in to_create:
