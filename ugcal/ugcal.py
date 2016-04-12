@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import argparse
 import datetime
 import httplib2
 import json
@@ -24,14 +25,6 @@ GROUPS = [
     'vilniuspy',
     'vilniusrb',
     ]
-
-
-try:
-    import argparse
-    flags = argparse.ArgumentParser(
-        parents=[oauth2client.tools.argparser]).parse_args()
-except ImportError:
-    flags = None
 
 
 logging.basicConfig(level=logging.INFO)
@@ -153,6 +146,8 @@ class GoogleCalendar:
 
     def insert_event(self, event):
         """Insert new event to calendar."""
+        logger.info("Creating event %s %s",
+                    event['summary'], event['start']['dateTime'])
         service = self._get_service()
         service.events().insert(
             calendarId=self._config.get('calendar_id'),
@@ -274,8 +269,14 @@ class UGCal(object):
         return {meetup['link']: meetup for meetup in meetups
                 if meetup['link'] not in existing_events}
 
-    def syncronize(self):
+    def syncronize(self, dry_run=False):
         """Syncronize google calendar with meetup.com"""
+
+        if dry_run:
+            print '*' * 60
+            print 'DRY RUN MODE ENABLED'
+            print '*' * 60
+
         meetups = self.meetup_api.get_upcomig_meetups()
         gcal_events = self.gcal_api.get_upcomig_events()
 
@@ -286,15 +287,21 @@ class UGCal(object):
             logger.info("Found events to create: %d", len(to_create))
             for url in to_create:
                 event = UGCal.build_event(to_create.get(url))
-                logger.info("Creating event %s %s",
-                            event['summary'],
-                            event['start']['dateTime'])
-                self.gcal_api.insert_event(event)
+                if not dry_run:
+                    self.gcal_api.insert_event(event)
+                else:
+                    print 'Event to create: {!s} ({!s})'.format(
+                        event['summary'], event['start']['dateTime'])
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dry-run', action='store_true',
+                        help='Do not create or update records.')
+    args = parser.parse_args()
+
     ugcal = UGCal()
-    ugcal.syncronize()
+    ugcal.syncronize(args.dry_run)
 
 if __name__ == "__main__":
     main()

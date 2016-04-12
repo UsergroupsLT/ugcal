@@ -4,6 +4,7 @@ env/
 .cache
 client_secret.json
 config.json
+build
 
 # Setuptools distribution folder.
 /dist/
