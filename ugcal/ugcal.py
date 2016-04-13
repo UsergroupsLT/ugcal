@@ -204,7 +204,7 @@ class UGCal(object):
         required fields.
         """
         event = {
-          'summary': meetup['name'],
+          'summary': meetup['name'].strip(),
           # 'location': '800 Howard St., San Francisco, CA 94103',
           'description': cls.build_description(meetup),
           'start': {

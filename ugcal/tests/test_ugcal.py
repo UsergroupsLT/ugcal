@@ -255,3 +255,10 @@ register you as a speaker!
             'timeZone': 'Europe/Vilnius',
         },
     } == event
+
+
+def test_build_event_trimming(php_meetup):
+    php_meetup['name'] = '  VilniusPHP 0x29   '
+    event = UGCal.build_event(php_meetup)
+
+    assert 'VilniusPHP 0x29' == event['summary']
