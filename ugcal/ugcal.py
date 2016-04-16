@@ -290,6 +290,8 @@ class UGCal(object):
                 else:
                     print 'Event to create: {!s} ({!s})'.format(
                         event['summary'], event['start']['dateTime'])
+        else:
+            logger.info('No events to create')
 
 
 def main():
