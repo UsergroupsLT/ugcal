@@ -18,6 +18,6 @@ Todo && Wishlist
 ----------------
 
 - Update existing events
-- Change structure to be a real python module.
 - Remove events if they are not listed on meetup.com anymore
 - CLI-based config setup
+- Venues

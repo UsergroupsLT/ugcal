@@ -126,7 +126,7 @@ class GoogleCalendar:
         service = discovery.build('calendar', 'v3', http=http)
         return service
 
-    def get_upcomig_events(self, limit=20):
+    def get_upcomig_events(self, limit=50):
         """Get upcoming calendar events.
 
         Creates a Google Calendar API service object and outputs a list of the
@@ -134,10 +134,11 @@ class GoogleCalendar:
         """
         service = self._get_service()
 
-        now = datetime.datetime.utcnow().isoformat() + 'Z'  # noqa 'Z' indicates UTC time
+        now = datetime.datetime.utcnow()
+        today = '{!s}T00:00:00Z'.format(now.date().isoformat())
         result = service.events().list(
             calendarId=self._config.get('calendar_id'),
-            timeMin=now, maxResults=limit, singleEvents=True,
+            timeMin=today, maxResults=limit, singleEvents=True,
             orderBy='startTime').execute()
         return result.get('items', [])
 
