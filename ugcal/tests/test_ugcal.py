@@ -262,3 +262,37 @@ def test_build_event_trimming(php_meetup):
     event = UGCal.build_event(php_meetup)
 
     assert 'VilniusPHP 0x29' == event['summary']
+
+
+def test_build_location_with_country(php_meetup):
+    location = UGCal.build_location(php_meetup)
+    assert '\u0160MTP, J. Galvyd\u017eio g. 5, Vilnius, Lithuania' == location
+
+
+def test_build_location_plain(php_meetup):
+    php_meetup['venue'].pop('localized_country_name')
+    php_meetup['venue'].pop('name')
+    php_meetup['venue']['address_1'] = 'J. Galvyd\u017eio g. 5'
+    location = UGCal.build_location(php_meetup)
+    assert 'J. Galvyd\u017eio g. 5, Vilnius' == location
+
+
+def test_build_location_with_city(php_meetup):
+    php_meetup['venue'].pop('localized_country_name')
+    php_meetup['venue'].pop('name')
+    location = UGCal.build_location(php_meetup)
+    assert 'J. Galvyd\u017eio g. 5, Vilnius' == location
+
+
+def test_build_location_with_city_and_different_case(php_meetup):
+    php_meetup['venue'].pop('localized_country_name')
+    php_meetup['venue'].pop('name')
+    php_meetup['venue']['city'] = 'vilnius'
+    location = UGCal.build_location(php_meetup)
+    assert 'J. Galvyd\u017eio g. 5, Vilnius' == location
+
+
+def test_build_location_with_country(php_meetup):
+    php_meetup['venue'].pop('name')
+    location = UGCal.build_location(php_meetup)
+    assert 'J. Galvyd\u017eio g. 5, Vilnius, Lithuania' == location

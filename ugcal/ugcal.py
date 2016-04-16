@@ -198,6 +198,24 @@ class UGCal(object):
         return '{}{}'.format(date_string, utc_offset)
 
     @classmethod
+    def build_location(cls, meetup):
+        """Build event location string."""
+
+        address = meetup['venue']['address_1']
+        parts = [address]
+
+        if 'name' in meetup['venue']:
+            parts.insert(0, meetup['venue']['name'])
+
+        if meetup['venue']['city'].lower() not in address.lower():
+            parts.append(meetup['venue']['city'])
+
+        if 'localized_country_name' in meetup['venue']:
+            parts.append(meetup['venue']['localized_country_name'])
+
+        return ', '.join(parts)
+
+    @classmethod
     def build_event(cls, meetup):
         """Build event body from meetup.
 
