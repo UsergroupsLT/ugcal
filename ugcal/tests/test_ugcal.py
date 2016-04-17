@@ -292,7 +292,7 @@ def test_build_location_with_city_and_different_case(php_meetup):
     assert 'J. Galvyd\u017eio g. 5, Vilnius' == location
 
 
-def test_build_location_with_country(php_meetup):
+def test_build_location_with_no_name(php_meetup):
     php_meetup['venue'].pop('name')
     location = UGCal.build_location(php_meetup)
     assert 'J. Galvyd\u017eio g. 5, Vilnius, Lithuania' == location

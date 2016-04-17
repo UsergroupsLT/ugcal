@@ -172,11 +172,6 @@ class UGCal(object):
         return "\n\n".join(parts)
 
     @classmethod
-    def build_location(cls):
-        """Build event location from meetup venue."""
-        raise NotImplementedError
-
-    @classmethod
     def build_date(cls, meetup, hours_offset=0):
         """Build date from start date on meetup object.
 
