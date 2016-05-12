@@ -15,15 +15,18 @@ from dateutil import parser
 from html2text import html2text
 
 GROUPS = [
+    'CodeforVilnius',
+    'functional-vilnius',
     'Technarium',
     'Vilnius-DevOps-Meetup',
+    'Vilnius-Golang',
+    'vilnius-hack-and-tell',
     'Vilnius-Hadoop-Meetup',
     'Vilnius-js',
-    'functional-vilnius',
-    'vilnius-hack-and-tell',
     'vilniusphp',
     'vilniuspy',
     'vilniusrb',
+    'Wix-com-tech-talks-in-Vilnius',
     ]
 
 
@@ -65,6 +68,8 @@ class MeetupCom:
         request = requests.get(url, params=params)
         logger.info("MeetupCom REQUEST: %s", url)
         data = request.json()
+        if 'errors' in data and len(data['errors']):
+            logger.error(url, params)
         return data
 
     def get_events(self, group, limit=10):
