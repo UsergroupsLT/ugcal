@@ -204,6 +204,13 @@ register you as a speaker!
     assert expect == result
 
 
+def test_build_description_with_no_description_field(php_meetup):
+    expect = """RSVP: http://www.meetup.com/vilniusphp/events/228864161/"""
+    php_meetup.pop('description')
+    result = UGCal.build_description(php_meetup)
+    assert expect == result
+
+
 def test_build_date(php_meetup):
     start = UGCal.build_date(php_meetup)
     assert "2016-04-07T18:30:00+03:00" == start

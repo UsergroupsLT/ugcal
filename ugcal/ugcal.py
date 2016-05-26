@@ -170,11 +170,12 @@ class UGCal(object):
     def build_description(cls, meetup):
         """Build event description from meetup."""
         parts = [
-            'RSVP: {}'.format(meetup['link']),
-            html2text(meetup['description']),
+            'RSVP: {}'.format(meetup.get('link')),
         ]
+        if meetup.get('description'):
+            parts.append(html2text(meetup.get('description')))
 
-        return "\n\n".join(parts)
+        return "\n\n".join(filter(None, parts))
 
     @classmethod
     def build_date(cls, meetup, hours_offset=0):
