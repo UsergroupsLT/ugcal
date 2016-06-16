@@ -23,6 +23,7 @@ GROUPS = [
     'vilnius-hack-and-tell',
     'Vilnius-Hadoop-Meetup',
     'Vilnius-js',
+    'VilniusML',
     'vilniusphp',
     'vilniuspy',
     'vilniusrb',
