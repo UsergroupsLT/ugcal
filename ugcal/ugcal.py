@@ -16,6 +16,7 @@ from html2text import html2text
 
 GROUPS = [
     'CodeforVilnius',
+    'Data-Science-Vilnius',
     'functional-vilnius',
     'Technarium',
     'Vilnius-DevOps-Meetup',
