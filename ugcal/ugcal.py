@@ -18,6 +18,7 @@ GROUPS = [
     'CodeforVilnius',
     'Data-Science-Vilnius',
     'functional-vilnius',
+    'Lithuania-Bitcoin-Meetup-Group',
     'Technarium',
     'Vilnius-DevOps-Meetup',
     'Vilnius-Golang',
