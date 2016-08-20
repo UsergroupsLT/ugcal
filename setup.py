@@ -23,7 +23,7 @@ setup(name='ugcal',
           'google-api-python-client',
           'html2text',
           'httplib2',
-          'python-dateutil'
+          'python-dateutil',
           'requests',
       ],
       zip_safe=False)
