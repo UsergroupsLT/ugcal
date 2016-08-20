@@ -19,3 +19,7 @@ lint:
 clean:
 	@find  -name "*.pyc" -delete
 
+.PHONY: bootstrap
+bootstrap:
+	pip install -r requirements.txt
+	pip install -r requirements-test.txt
