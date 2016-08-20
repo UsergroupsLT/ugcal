@@ -172,6 +172,11 @@ def test_existing_events_by_name_begining(php_meetup, php_event):
     assert php_event == result[php_meetup['link']]
 
 
+def test_existing_events_with_missing_summary(js_meetup, php_event):
+    del php_event['summary']
+    UGCal.find_existing_events([js_meetup], [php_event])
+
+
 def test_filter_events_to_create():
     old_php_meetup = {
         'link': 'http://www.meetup.com/php_meetup/events/123456/'

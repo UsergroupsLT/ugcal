@@ -275,14 +275,15 @@ class UGCal(object):
 
                 event_start = get_event_start_date(event)
                 if meetup_start == event_start:
-                    if meetup['name'] == event['summary']:
+                    if meetup['name'] == event.get('summary'):
                         existing_events[link] = event
                         break
 
-                    if (meetup['name'] ==
+                    if (event.get('summary') is not None and (
+                            meetup['name'] ==
                             event['summary'][:len(meetup['name'])] or
                             event['summary'] ==
-                            meetup['name'][:len(event['summary'])]):
+                            meetup['name'][:len(event['summary'])])):
                         existing_events[link] = event
                         break
 
