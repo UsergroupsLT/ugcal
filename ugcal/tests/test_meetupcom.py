@@ -22,7 +22,7 @@ def test_get_results_with_repeated_calls(mock_sleep):
                   json=response, status=429)
 
     with pytest.raises(CredentialsThrottled):
-        meetup = MeetupCom()
+        meetup = MeetupCom({})
         result = meetup._get_results('whatever')
 
         assert meetup.REQUEST_RETRIES > 0

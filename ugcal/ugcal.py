@@ -68,8 +68,8 @@ class MeetupCom(object):
     REQUEST_RETRIES = 3
 
     """Meetup.com API client."""
-    def __init__(self):
-        self._config = Config()
+    def __init__(self, config):
+        self._config = config
 
     def get_groups(self):
         """Retrieve list of groups."""
@@ -187,7 +187,8 @@ class UGCal(object):
     EVENT_DURATION_HOURS = 2
 
     def __init__(self):
-        self.meetup_api = MeetupCom()
+        config = Config()
+        self.meetup_api = MeetupCom(config)
         self.gcal_api = GoogleCalendar()
 
     @classmethod
