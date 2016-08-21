@@ -58,9 +58,14 @@ class Config:
         return self.CLIENT_SECRET_FILE
 
 
-class MeetupCom:
+class CredentialsThrottled(Exception):
+    pass
+
+
+class MeetupCom(object):
 
     DAYS_FORECAST = 30
+    REQUEST_RETRIES = 3
 
     """Meetup.com API client."""
     def __init__(self):
@@ -73,12 +78,23 @@ class MeetupCom:
     def _get_results(self, endpoint, params={}):
         params['key'] = self._config.get('meetup_api_key')
         url = "http://api.meetup.com/" + endpoint
-        request = requests.get(url, params=params)
-        logger.info("MeetupCom REQUEST: %s", url)
-        data = request.json()
-        if 'errors' in data and len(data['errors']):
-            logger.error(url, params)
-        return data
+        call_count = self.REQUEST_RETRIES
+
+        while True:
+            call_count -= 1
+            request = requests.get(url, params=params)
+            logger.info("MeetupCom REQUEST: %s", url)
+            data = request.json()
+
+            if 'errors' in data and len(data['errors']):
+                logger.error(url, params)
+                if 'throttled' == data['errors'][0]['code']:
+                    if call_count == 0:
+                        raise CredentialsThrottled(data)
+                    time.sleep(5)
+                    continue
+                raise Exception(data['errors'])
+            return data
 
     def get_events(self, group, limit=10):
         """Return events list of Meetup group."""
