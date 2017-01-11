@@ -21,6 +21,7 @@ GROUPS = [
     'Drone-Racing-Lietuva',
     'functional-vilnius',
     'Lithuania-Bitcoin-Meetup-Group',
+    'Rust-in-Vilnius',
     'Technarium',
     'vilnius-backend',
     'Vilnius-Clojure',
