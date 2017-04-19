@@ -15,6 +15,7 @@ from dateutil import parser
 from html2text import html2text
 
 GROUPS = [
+    'cocoalt',
     'CodeforVilnius',
     'Data-Science-Vilnius',
     'Deep-Learning-Papers-Review-at-Neurotechnology',
