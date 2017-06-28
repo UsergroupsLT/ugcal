@@ -352,5 +352,6 @@ def main():
     ugcal = UGCal()
     ugcal.syncronize(args.dry_run)
 
+
 if __name__ == "__main__":
     main()

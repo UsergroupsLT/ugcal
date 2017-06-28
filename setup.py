@@ -5,6 +5,7 @@ def readme():
     with open('README.rst') as f:
         return f.read()
 
+
 setup(name='ugcal',
       version='0.1',
       description=('Script to syncronize events from meetup.com to Google',
