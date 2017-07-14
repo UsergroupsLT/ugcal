@@ -1,0 +1,1 @@
+1 */4 * * * root cd /ugcal; python -m ugcal.ugcal >> /var/log/cron.log 2>&1

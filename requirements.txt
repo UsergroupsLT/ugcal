@@ -1,5 +1,5 @@
 google-api-python-client==1.4.2
 html2text==2016.1.8
-oauth2client==1.5.2
+oauth2client==1.4.12
 python-dateutil==2.5.2
 requests==2.8.1
