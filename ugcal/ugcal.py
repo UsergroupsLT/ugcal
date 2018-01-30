@@ -41,6 +41,7 @@ GROUPS = [
     'vilniuspy',
     'vilniusrb',
     'Wix-com-tech-talks-in-Vilnius',
+    'AgileLietuva',
     ]
 
 
