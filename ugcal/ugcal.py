@@ -42,7 +42,7 @@ GROUPS = [
     'vilniusphp',
     'vilniuspy',
     'vilniusrb',
-    'Uber-Engineering-Events-Vilnius'
+    'Uber-Engineering-Events-Vilnius',
     'Wix-com-tech-talks-in-Vilnius',
     ]
 
