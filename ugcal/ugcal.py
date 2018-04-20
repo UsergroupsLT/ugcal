@@ -18,6 +18,7 @@ GROUPS = [
     'AgileLietuva',
     'Artificial-Intelligence-Group',
     'AWS-Vilnius-Meetup',
+    'biohackersvilnius',
     'cocoalt',
     'CodeforVilnius',
     'Data-Science-Vilnius',
