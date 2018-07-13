@@ -26,6 +26,7 @@ GROUPS = [
     'Docker-Vilnius',
     'Drone-Racing-Lietuva',
     'functional-vilnius',
+    'Google-Developer-Group-Vilnius',
     'Kaunas-WordPress-Meetup',
     'Lithuania-Bitcoin-Meetup-Group',
     'Rust-in-Vilnius',
