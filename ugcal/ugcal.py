@@ -40,7 +40,6 @@ GROUPS = [
     'Vilnius-js',
     'Vilnius-MongoDB-User-Group',
     'Vilnius-Tech-Leads',
-    'VilniusML',
     'vilniusphp',
     'vilniuspy',
     'vilniusrb',
