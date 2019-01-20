@@ -73,6 +73,9 @@ class CredentialsThrottled(Exception):
     pass
 
 
+MEETUP_GROUP_ERR = 'group_error'  # Error code from API
+
+
 class MeetupCom(object):
 
     DAYS_FORECAST = 30
@@ -84,7 +87,20 @@ class MeetupCom(object):
 
     def get_groups(self):
         """Retrieve list of groups."""
-        return [self._get_results(name) for name in GROUPS]
+        groups = []
+        for name in GROUPS:
+            try:
+                group = self._get_results(name)
+                groups.append(group)
+            except Exception as e:
+                if (type(e.message[0]) is dict
+                        and e.message[0].get('code') == MEETUP_GROUP_ERR):
+                    logger.error("%s: %s",
+                                 e.message[0].get('code'),
+                                 e.message[0].get('message'))
+                else:
+                    raise e
+        return groups
 
     def _get_results(self, endpoint, params={}):
         params['key'] = self._config.get('meetup_api_key')
