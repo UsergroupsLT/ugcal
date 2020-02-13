@@ -101,7 +101,6 @@ class MeetupCom(object):
         return groups
 
     def _get_results(self, endpoint, params={}):
-        params['key'] = self._config.get('meetup_api_key')
         url = "http://api.meetup.com/" + endpoint
         call_count = self.REQUEST_RETRIES
 
