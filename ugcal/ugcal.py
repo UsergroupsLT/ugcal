@@ -5,13 +5,15 @@ import datetime
 import httplib2
 import json
 import logging
-import oauth2client
 import os
+import pickle
 import requests
 import time
 
-from apiclient import discovery
 from dateutil import parser
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
 from html2text import html2text
 
 GROUPS = [
@@ -148,35 +150,29 @@ class GoogleCalendar:
         self._config = Config()
 
     def get_credentials(self):
-        """Gets valid user credentials from storage.
-
-        If nothing has been stored, or if the stored credentials are invalid,
-        the OAuth2 flow is completed to obtain the new credentials.
-
-        Returns:
-            Credentials, the obtained credential.
-        """
-        home_dir = os.path.expanduser('~')
-        credential_dir = os.path.join(home_dir, '.credentials')
-        if not os.path.exists(credential_dir):
-            os.makedirs(credential_dir)
-        credential_path = os.path.join(credential_dir,
-                                       'gcal-usergroups-lt.json')
-
-        store = oauth2client.file.Storage(credential_path)
-        credentials = store.get()
-        if not credentials or credentials.invalid:
-            flow = oauth2client.client.flow_from_clientsecrets(
-                self._config.get_secret_file(), self.SCOPES)
-            flow.user_agent = 'Usergroups.lt Calendar updater'
-            credentials = oauth2client.tools.run(flow, store)
-            print 'Storing credentials to ' + credential_path
-        return credentials
+        creds = None
+        # The file token.pickle stores the user's access and refresh tokens,
+        # and is created automatically when the authorization flow completes
+        # for the first  time.
+        if os.path.exists('token.pickle'):
+            with open('token.pickle', 'rb') as token:
+                creds = pickle.load(token)
+        # If there are no (valid) credentials available, let the user log in.
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                        'credentials.json', self.SCOPES)
+                creds = flow.run_local_server(port=0)
+            # Save the credentials for the next run
+            with open('token.pickle', 'wb') as token:
+                pickle.dump(creds, token)
+        return creds
 
     def _get_service(self):
-        credentials = self.get_credentials()
-        http = credentials.authorize(httplib2.Http())
-        service = discovery.build('calendar', 'v3', http=http)
+        creds = self.get_credentials()
+        service = build('calendar', 'v3', credentials=creds)
         return service
 
     def get_upcomig_events(self, limit=50):

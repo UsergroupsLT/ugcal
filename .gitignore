@@ -2,10 +2,11 @@ env/
 *.pyc
 *.tmp
 .cache
-client_secret.json
 config.json
 build
 secrets
+credentials.json
+token.pickle
 
 # Setuptools distribution folder.
 /dist/
