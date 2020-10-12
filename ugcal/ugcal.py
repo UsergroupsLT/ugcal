@@ -38,7 +38,6 @@ GROUPS = [
     'Vilnius-Golang',
     'Vilnius-Hadoop-Meetup',
     'Vilnius-js',
-    'Vilnius-MongoDB-User-Group',
     'Vilnius-Tech-Leads',
     'vilniusphp',
     'vilniuspy',
