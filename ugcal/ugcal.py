@@ -30,6 +30,7 @@ GROUPS = [
     'Google-Developer-Group-Vilnius',
     'Kaunas-WordPress-Meetup',
     'Lithuania-Bitcoin-Meetup-Group',
+    'PrestaShop-Lithuania-Ecommerce-Meetup',
     'Rust-in-Vilnius',
     'Technarium',
     'vilnius-backend',
