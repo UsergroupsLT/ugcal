@@ -22,6 +22,7 @@ GROUPS = [
     'AWS-Vilnius-Meetup',
     'biohackersvilnius',
     'cocoalt',
+    'Cloud-Native-Lithuania',
     'Data-Science-Vilnius',
     'Deep-Learning-Papers-Review-at-Neurotechnology',
     'Docker-Vilnius',
