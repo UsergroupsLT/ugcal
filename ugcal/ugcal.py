@@ -28,6 +28,7 @@ GROUPS = [
     'Drone-Racing-Lietuva',
     'functional-vilnius',
     'Google-Developer-Group-Vilnius',
+    'kaunaspy',
     'Kaunas-WordPress-Meetup',
     'Lithuania-Bitcoin-Meetup-Group',
     'Rust-in-Vilnius',
